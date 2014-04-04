@@ -79,7 +79,7 @@ end
 
 execute '-- create user' do
 	user 'postgres'
-	cwd '.'
+	cwd '#{node[:home][:workarea]}'
 	command 'create user #{node[:postgres][:username]} with password "#{node[:postgres][:password]}"'
 end
 
@@ -87,6 +87,6 @@ end
 
 execute '-- create database' do
 	user 'postgres'
-	cwd '.'
+	cwd '#{node[:home][:workarea]}'
 	command 'CREATE DATABASE #{node[:postgres][:dbname]} WITH OWNER #{node[:postgres][:username]}'
 end
