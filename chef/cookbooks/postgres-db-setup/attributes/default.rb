@@ -1,4 +1,4 @@
-default[:home][:workarea] = "/home/bhagyalakshmi"
+default[:home][:workarea] = "/home/bhagyalakshmis"
 
 default[:system][:user] = ""
 default[:system][:owner] = "root"
