@@ -1,5 +1,18 @@
-package '#{node[:postgres][:software]}'
+#Install postgres
+execute '-- install postgres' do
+	user 'root'
+	cwd '#{node[:home][:workarea]}'
+	command 'apt-get -y install #{node[:postgres][:software]}'
+end
 
+#kill postgres
+execute '-- kill postgres' do
+	user 'root'
+	cwd '#{node[:home][:workarea]}'
+	command 'pkill #{node[:postgres][:software]}'
+end
+
+#Create directory for postgres
 directory '#{node[:postgres][:workarea]}' do
 	user '#{node[:system][:owner]}'
 	group '#{node[:system][:owner]}'
@@ -18,16 +31,17 @@ directory '#{node[:postgres][:workarea]}#{node[:postgres][:version]}#{node[:post
 	mode '644'
 end
 
-execute '-- copy data' do
+#change owner for postgres folder
+execute '-- change owner for postgres folder' do
 	user '#{node[:system][:owner]}'
-	cwd '.'
+	cwd '#{node[:home][:workarea]}'
 	command 'chown -R postgres:tape /opt/postgresql/'
 end
 
-
+#copy data
 execute '-- copy data' do
 	user 'postgres'
-	cwd '.'
+	cwd '#{node[:home][:workarea]}'
 	command 'cp /etc/postgresql/9.1/main/* /opt/postgresql/9.1/data/'
 end
 
@@ -54,6 +68,13 @@ cookbook_file "#{node[:postgres][:workarea]}#{node[:postgres][:version]}#{node[:
   source "pb_hba.conf"
 end
 
+#Restart the postgres
+execute '-- install postgres' do
+	user 'root'
+	cwd '#{node[:home][:workarea]}'
+	command '/usr/lib/postgresql/9.1/bin/pg_ctl  -D #{node[:postgres][:workarea]}#{node[:postgres][:version]}#{node[:postgres][:data]} start'
+end
+
 #create user
 
 execute '-- create user' do
@@ -69,6 +90,3 @@ execute '-- create database' do
 	cwd '.'
 	command 'CREATE DATABASE #{node[:postgres][:dbname]} WITH OWNER #{node[:postgres][:username]}'
 end
-
-
-
