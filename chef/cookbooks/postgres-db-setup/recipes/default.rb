@@ -14,7 +14,7 @@ end
 
 #Create directory for postgres
 directory '#{node[:postgres][:workarea]}' do
-	user '#{node[:system][:owner]}'
+	user "#{node[:system][:owner]}"
 	group '#{node[:system][:owner]}'
 	mode '644'
 end
